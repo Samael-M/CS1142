@@ -14,7 +14,7 @@ int main(void)
  
     // Now test with one of the provided test files
     Map mapGood;
-    char* goodFilename = "tiny.txt";
+    char* goodFilename = "huge.txt";
     printf("init of '%s' = %d\n", goodFilename, mapInit(&mapGood, goodFilename));
 
     // Test display and gem count functions

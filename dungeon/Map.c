@@ -15,13 +15,13 @@ bool mapInit(Map *map, const char *filename)
     fscanf(in, "%d", &map->cols);
     fscanf(in, "%d", &map->avatarRow);
     fscanf(in, "%d", &map->avatarCol);
-
+    
     map->tiles = malloc(sizeof(Tile *) * map->rows);
     for (int i = 0; i < map->rows; i++)
     {
         map->tiles[i] = malloc(sizeof(Tile) * map->cols);
     }
-
+    
     int tile = 0;
     int i = 0;
     int j = 0;
@@ -66,35 +66,8 @@ void mapDisplay(const Map *map)
             if (i == map->avatarRow && j == map->avatarCol)
             {
                 printf("@");
-            }
-            else if (map->tiles[i][j] == TileKey)
-            {
-                printf("+");
-            }
-            else if (map->tiles[i][j] == TileWall)
-            {
-                printf("#");
-            }
-            else if (map->tiles[i][j] == TileLockedDoor)
-            {
-                printf("=");
-            }
-            else if (map->tiles[i][j] == TileDoor)
-            {
-                printf("-");
-            }
-            else if (map->tiles[i][j] == TileSecretPassage)
-            {
-                printf("#");
-            }
-            else if (map->tiles[i][j] == TileGem)
-            {
-                printf("*");
-            }
-            else if (map->tiles[i][j] == TileEmpty)
-            {
-                printf(" ");
-            }
+            } else tileDisplay(map->tiles[i][j]);
+            
         }
         printf("\n");
     }
@@ -112,14 +85,14 @@ bool mapMoveAvatar(Map *map, Avatar *avatar, Action action)
         }
         else if (map->tiles[map->avatarRow - 1][map->avatarCol] == TileKey)
         {
-            avatar->keys++;
+            avatarAddKey(avatar);
             map->tiles[map->avatarRow - 1][map->avatarCol] = TileEmpty;
             map->avatarRow--;
             return 1;
         }
         else if (map->tiles[map->avatarRow - 1][map->avatarCol] == TileGem)
         {
-            avatar->gems++;
+            avatarAddGem(avatar);
             map->tiles[map->avatarRow - 1][map->avatarCol] = TileEmpty;
             map->avatarRow--;
             return 1;
@@ -127,7 +100,7 @@ bool mapMoveAvatar(Map *map, Avatar *avatar, Action action)
         else if (map->tiles[map->avatarRow - 1][map->avatarCol] == TileLockedDoor &&
                  avatar->keys > 0)
         {
-            avatar->keys--;
+            avatarUseKey(avatar);
             map->tiles[map->avatarRow - 1][map->avatarCol] = TileDoor;
             map->avatarRow--;
             return 1;
